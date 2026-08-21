@@ -1,0 +1,94 @@
+ARCHIVOS DEL SITIO (public/)
+============================
+
+Todo lo que hay aquí se copia tal cual al sitio publicado.
+El sitio completo pesa 5.1 MB.
+
+
+ESTADO ACTUAL
+-------------
+   public/foto.jpg                                     379 KB
+   public/cv/CV_Erick_Ayma_Choque_Desarrollador.pdf     provisional, sustitúyelo
+   public/projects/video/arludent.mp4                   546 KB
+   public/projects/video/energy-home.mp4                1.1 MB
+   public/projects/video/sire.mp4                       2.5 MB
+   public/projects/*-poster.webp                        18-28 KB cada uno
+
+   Los originales sin comprimir (36 MB) están en /media-src, fuera de este
+   directorio: no se publican ni se suben a git. Si formateas el equipo o
+   clonas el repo en otro sitio, esos originales NO viajan. Guárdalos donde
+   guardes tus grabaciones.
+
+
+1) TU FOTO
+----------
+   Archivo:  public/foto.jpg
+   Formato:  JPG o WEBP vertical 4:5 (ej. 1000 x 1250 px), menos de 500 KB
+   Si falta, el hero muestra un marcador y no se rompe.
+
+
+2) TU CV
+--------
+   Archivo:  public/cv/CV_Erick_Ayma_Choque_Desarrollador.pdf
+   Hay una versión generada con tus datos. Sustitúyela por la tuya
+   manteniendo EXACTAMENTE ese nombre.
+
+
+3) AÑADIR O CAMBIAR UNA DEMO
+----------------------------
+   a) Deja la grabación original en /media-src (vale MP4, MOV, WebP o GIF
+      animado; sin espacios ni acentos en el nombre).
+
+   b) Añade o edita su entrada en la lista JOBS de scripts/optimize-media.mjs:
+
+        {
+          input:  'media-src/mi-demo.webp',
+          output: 'public/projects/video/mi-demo.mp4',
+          poster: 'public/projects/mi-demo-poster.webp',
+          width:  1280,   // 640 si la grabación es vertical
+          crf:    30,     // más alto = más comprimido y peor calidad
+        }
+
+   c) Instala las herramientas, convierte y desinstálalas:
+
+        npm install -D ffmpeg-static sharp
+        npm run media
+        npm uninstall ffmpeg-static sharp
+
+   d) Apunta el proyecto al resultado en src/data/site.js:
+
+        media:  'projects/video/mi-demo.mp4'
+        poster: 'projects/mi-demo-poster.webp'
+
+   Para ver cuántos fotogramas y qué duración tiene un archivo:
+        npm install -D sharp && npm run media:info -- media-src/mi-demo.webp
+
+
+   Qué hace la conversión:
+     · WebP/GIF animado → MP4  (pesa entre 5 y 10 veces menos)
+     · vídeo            → MP4 recomprimido y listo para streaming
+     · saca un póster en WebP del segundo 2 de cada vídeo
+     · los originales de /media-src no se tocan
+
+   Nota: ffmpeg por sí solo NO sabe leer WebP animado (ignora los chunks
+   ANIM y ANMF). Por eso el script extrae los fotogramas con sharp y se los
+   pasa a ffmpeg por stdin.
+
+
+   El material vertical se muestra entero y centrado; el apaisado se recorta
+   a sangre. Se detecta solo al cargar los metadatos.
+
+
+LOGOS DE TECNOLOGÍAS
+--------------------
+   Carpeta:  public/stacks/
+   Origen:   Simple Icons (https://simpleicons.org) — licencia CC0
+
+   Para añadir uno nuevo:
+     1. descarga    https://cdn.simpleicons.org/<slug>
+     2. guárdalo en public/stacks/<slug>.svg
+     3. regístralo  en src/data/tech.js
+
+   Los logos casi negros (Angular, GitHub, Next.js, Prisma, MariaDB) tienen
+   además un <slug>-dark.svg en blanco, que es el que se usa en modo oscuro:
+     https://cdn.simpleicons.org/<slug>/FAFAFA

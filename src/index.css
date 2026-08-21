@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+/* La clase `dark` la pone un script en <head> antes del primer pintado. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Tema — Tailwind v4 (configuración CSS-first)
+
+   Los utilitarios apuntan a tokens semánticos (`bg-canvas`, `text-ink`,
+   `border-line`…) y cada token reenvía a una variable `--t-*` que cambia de
+   valor según el tema. Así el cambio claro/oscuro no exige duplicar clases.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  --color-canvas: var(--t-canvas);
+  --color-surface: var(--t-surface);
+  --color-surface-2: var(--t-surface-2);
+  --color-line: var(--t-line);
+  --color-line-strong: var(--t-line-strong);
+  --color-ink: var(--t-ink);
+  --color-ink-soft: var(--t-ink-soft);
+  --color-ink-faint: var(--t-ink-faint);
+  --color-invert: var(--t-invert);
+  --color-on-invert: var(--t-on-invert);
+
+  /* Color de resalte único */
+  --color-accent: var(--t-accent);
+  /* Variante legible del acento cuando se usa como TEXTO sobre el fondo:
+     el azul puro no tiene contraste suficiente en modo oscuro. */
+  --color-accent-ink: var(--t-accent-ink);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ------------------------------- Modo claro ------------------------------ */
+:root {
+  color-scheme: light;
+
+  --t-canvas: #ffffff;
+  --t-surface: #fbfbfb;
+  --t-surface-2: #f4f4f5;
+  --t-line: #e4e4e7;
+  --t-line-strong: #a1a1aa;
+  --t-ink: #09090b;
+  --t-ink-soft: #52525b;
+  --t-ink-faint: #8b8b93;
+  --t-invert: #09090b;
+  --t-on-invert: #fafafa;
+
+  --t-accent: #0000ff;
+  --t-accent-ink: #0000ff;
+
+  --t-grid: rgba(0, 0, 0, 0.045);
+  --t-glow: 0.06;
+  --t-noise: 0.02;
+  --t-ring-core: rgba(0, 0, 255, 0.85);
+  --t-ring-halo: rgba(0, 0, 0, 0.12);
+  --t-inner-glow: rgba(0, 0, 255, 0.05);
+  --t-glow-blend: multiply;
+}
+
+/* ------------------------------ Modo oscuro ------------------------------ */
+.dark {
+  color-scheme: dark;
+
+  --t-canvas: #09090b;
+  --t-surface: #0c0c0e;
+  --t-surface-2: #141416;
+  --t-line: #27272a;
+  --t-line-strong: #52525b;
+  --t-ink: #fafafa;
+  --t-ink-soft: #a1a1aa;
+  --t-ink-faint: #71717a;
+  --t-invert: #fafafa;
+  --t-on-invert: #09090b;
+
+  --t-accent: #0000ff;
+  --t-accent-ink: #7f8cff;
+
+  --t-grid: rgba(255, 255, 255, 0.028);
+  --t-glow: 0.16;
+  --t-noise: 0.035;
+  --t-ring-core: rgba(70, 90, 255, 0.9);
+  --t-ring-halo: rgba(255, 255, 255, 0.14);
+  --t-inner-glow: rgba(255, 255, 255, 0.05);
+  --t-glow-blend: color-dodge;
+}
+
+@layer base {
+  * {
+    border-color: var(--t-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--t-canvas);
+    color: var(--t-ink-soft);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    transition: background-color 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
+  }
+
+  ::selection {
+    background-color: var(--t-accent);
+    color: #ffffff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--t-canvas);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--t-line);
+    border: 3px solid var(--t-canvas);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--t-line-strong);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--t-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Contenedor maestro: mismo ritmo horizontal en todas las secciones */
+  .shell {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Etiqueta mono en mayúsculas usada como encabezado de sección */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--t-ink-faint);
+  }
+
+  /* Rejilla de fondo muy sutil */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, var(--t-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--t-grid) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  /* Anillo de 1px para el borde luminoso de SpotlightCard.
+     Va en la hoja de estilos (y no inline) porque `mask` es una abreviada que
+     reinicia `mask-composite`: aquí el orden de las declaraciones sí está
+     garantizado, mientras que en un objeto de estilos inline no lo está. */
+  .ring-mask {
+    padding: 1px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+
+  /* Resplandor de los logos de tecnología (ver TechIcon.jsx).
+     El modo de fusión cambia con el tema: `color-dodge` enciende el color
+     sobre fondo oscuro, pero sobre blanco lo quemaría, así que en claro se
+     usa `multiply`, que deja una sombra del color de la marca. */
+  .tech-glow {
+    filter: blur(14px) saturate(2.2);
+    mix-blend-mode: var(--t-glow-blend);
+  }
+
+  /* Grano de película: le quita el aspecto "plano" a los fondos planos */
+  .noise::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: var(--t-noise);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Máscara de desvanecido para listas con scroll horizontal */
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--t-surface-2), transparent);
+  animation: shimmer 1.6s infinite;
+}
