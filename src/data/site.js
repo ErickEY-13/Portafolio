@@ -10,11 +10,10 @@ export const site = {
   degree: 'Bachiller en Ingeniería de Sistemas',
   location: 'Tacna, Perú',
 
-  // Resumen del hero: 2 líneas como máximo (unos 150 caracteres).
-  // Habla de lo que resuelves, no de con qué: las tecnologías ya salen
-  // con su logo más abajo, repetirlas aquí solo gasta la primera frase.
+  // Resumen del hero. A partir de unos 250 caracteres ocupa 4 líneas y empieza
+  // a competir con el titular, así que conviene no alargarlo mucho más.
   summary:
-    'Convierto procesos manuales en sistemas que la gente usa a diario: intranets municipales, plataformas clínicas con IA y apps móviles.',
+    'Construyo aplicaciones web y móviles robustas aplicando buenas prácticas de ingeniería, arquitectura limpia y código mantenible. Especializado en transformar flujos complejos en sistemas escalables, seguros y centrados en una excelente experiencia de usuario.',
 
   // Tu retrato: deja el archivo en /public/foto.jpg.
   // Si aún no existe, el hero muestra un marcador en vez de romperse.
